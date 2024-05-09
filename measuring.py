@@ -1,20 +1,35 @@
 import cv2
 import numpy as np
 
+image_copy = None  # Declare image_copy as a global variable
+
 def measure_length(event, x, y, flags, param):
+    global image_copy  # Access the global image_copy variable
+
     if event == cv2.EVENT_LBUTTONDOWN and len(param) < 4:
         param.append((x, y))
         if len(param) == 1:
-            cv2.circle(image_copy, (x, y), 5, (0, 0, 255), -1)  # Add a red circle marker at the selected point
+            cv2.circle(image_copy, (x, y), 5, (0, 0, 255), -1)
         elif len(param) == 2:
             cv2.line(image_copy, param[0], param[1], (0, 255, 0), 2)
-            cv2.imshow('Image', image_copy)
         elif len(param) == 3:
-            cv2.circle(image_copy, (x, y), 5, (0, 0, 255), -1)  # Add a red circle marker at the selected point
+            cv2.circle(image_copy, (x, y), 5, (0, 0, 255), -1)
         elif len(param) == 4:
             cv2.line(image_copy, param[2], param[3], (255, 0, 0), 2)
-            cv2.imshow('Image', image_copy)
 
+    elif event == cv2.EVENT_MOUSEMOVE and len(param) == 1:
+        if len(param) == 1:
+            image_copy = image.copy()
+            cv2.circle(image_copy, param[0], 5, (0, 0, 255), -1)
+            cv2.line(image_copy, param[0], (x, y), (0, 255, 0), 2)
+    elif event == cv2.EVENT_MOUSEMOVE and len(param) == 3:
+        if len(param) == 3:
+            image_copy = image.copy()
+            cv2.circle(image_copy, param[2], 5, (0, 0, 255), -1)
+            cv2.line(image_copy, param[0], (x, y), (0, 255, 0), 2)
+
+
+    cv2.imshow('Image', image_copy)
 
 # Load the image
 image = cv2.imread('test.jpg')
